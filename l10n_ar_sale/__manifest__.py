@@ -1,6 +1,6 @@
 {
     "name": "Argentinian Sale Total Fields",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.1.1",
     "category": "Localization/Argentina",
     "sequence": 14,
     "author": "ADHOC SA",
@@ -9,7 +9,7 @@
     "summary": "",
     "depends": [
         "sale_ux",  # we make it dependent on sale_ux by setting group_delivery_date. More information in ticket 95265
-        "l10n_ar_tax",
+        "lp_l10n_ar_account_tax",
     ],
     "external_dependencies": {},
     "data": [
