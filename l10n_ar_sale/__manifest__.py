@@ -1,6 +1,6 @@
 {
     'name': 'Argentinian Sale Total Fields',
-    'version': "17.0.1.4.0",
+    'version': "17.0.1.4.1",
     'category': 'Localization/Argentina',
     'sequence': 14,
     'author': 'ADHOC SA',
@@ -19,7 +19,7 @@
         'views/sale_view.xml',
         'views/l10n_ar_sale_templates.xml',
         'views/sale_checkbook_views.xml',
-        'views/sale_report_templates.xml',
+        #'views/sale_report_templates.xml', avoided to override the default report templates, instead of inheriting them due to conflict with other modules that also inherit the same templates
         'wizards/res_config_settings_view.xml',
     ],
     'demo': [
