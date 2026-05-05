@@ -8,7 +8,7 @@
     'license': 'AGPL-3',
     'depends': [
         'delivery_ux',
-        'l10n_ar_stock',
+        'l10n_ar_stock_adhoc',
     ],
     'data': [
         'views/report_deliveryslip.xml',

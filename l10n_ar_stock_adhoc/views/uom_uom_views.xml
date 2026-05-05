@@ -7,9 +7,9 @@
         <field name="inherit_id" ref="uom.product_uom_form_view"/>
         <field name="arch" type="xml">
             <field name="rounding" position="after">
-                <label for="arba_code"/>
+                <label for="adhoc_arba_code"/>
                 <div class="oe_inline">
-                    <field name="arba_code" class="oe_inline"/>
+                    <field name="adhoc_arba_code" class="oe_inline"/>
                     <button name="action_arba_codes" type="object" string="Ver códigos" class="oe_edit_only oe_inline"/>
                 </div>
             </field>
@@ -22,7 +22,7 @@
         <field name="inherit_id" ref="uom.product_uom_tree_view"/>
         <field name="arch" type="xml">
             <tree>
-                <field name="arba_code" optional="show"/>
+                <field name="adhoc_arba_code" optional="show"/>
                 <button name="action_arba_codes" type="object" title="Ver códigos" icon="fa-external-link"/>
             </tree>
         </field>
@@ -34,7 +34,7 @@
         <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
         <field name="arch" type="xml">
             <field name="rounding" position="after">
-                <field name="arba_code" optional="show"/>
+                <field name="adhoc_arba_code" optional="show"/>
                 <button name="action_arba_codes" type="object" title="Ver códigos" icon="fa-external-link"/>
             </field>
         </field>

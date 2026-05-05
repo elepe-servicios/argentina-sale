@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    arba_cot = fields.Char(
+    adhoc_arba_cot = fields.Char(
         'Clave COT',
         help='Clave para generación de remito electŕonico',
     )
@@ -37,7 +37,7 @@ class ResCompany(models.Model):
         self.ensure_one()
         cuit = self.partner_id.ensure_vat()
 
-        if not self.arba_cot:
+        if not self.adhoc_arba_cot:
             raise UserError(_(
                 'You must configure ARBA COT on company %s') % (
                     self.name))
@@ -53,7 +53,7 @@ class ResCompany(models.Model):
         # wrapper=None, cacert=None, trace=False, testing=""
         arba_cot_url = self.get_arba_cot_login_url(environment_type)
         ws.Usuario = cuit
-        ws.Password = self.arba_cot
+        ws.Password = self.adhoc_arba_cot
         ws.Conectar(url=arba_cot_url)
         _logger.info(
             'Connection getted to ARBA COT with url "%s" and CUIT %s' % (

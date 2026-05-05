@@ -34,19 +34,19 @@
             <t t-set="document_letter" t-value="o.document_type_id.l10n_ar_letter or 'X'"/>
             <t t-set="document_legend" t-value="'Doc. no válido como factura'"/>
             <t t-set="report_name" t-value="o.document_type_id.report_name or 'Comprobante de Entrega'"/>
-            <t t-set="header_address" t-value="o.book_id.report_partner_id or o.picking_type_id.warehouse_id.partner_id or o.company_id.partner_id"/>
+            <t t-set="header_address" t-value="o.book_id.adhoc_report_partner_id or o.picking_type_id.warehouse_id.partner_id or o.company_id.partner_id"/>
 
             <t t-set="custom_footer">
                 <div class="row">
                     <div name="footer_left_column" class="col-8 text-center">
-                        <t t-if="o.l10n_ar_afip_barcode">
+                        <t t-if="o.adhoc_l10n_ar_afip_barcode">
                             <div style="text-align: center;">
-                                <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.l10n_ar_afip_barcode, 400, 40)" alt="Barcode" style="height:40px; width:100%"/>
+                                <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.adhoc_l10n_ar_afip_barcode, 400, 40)" alt="Barcode" style="height:40px; width:100%"/>
                                 <br/>
-                                <span t-esc="o.l10n_ar_afip_barcode" style="font-size: 14px;"/>
+                                <span t-esc="o.adhoc_l10n_ar_afip_barcode" style="font-size: 14px;"/>
                             </div>
                         </t>
-                        <t t-if="o.book_id.report_signature_section and not o.l10n_ar_afip_barcode">
+                        <t t-if="o.book_id.adhoc_report_signature_section and not o.adhoc_l10n_ar_afip_barcode">
                             <table class="table table-borderless table-sm">
                                 <thead>
                                     <tr>
@@ -80,11 +80,11 @@
                         </t>
                     </div>
                     <div name="footer_right_column" class="col-4 text-right">
-                        <div t-if="not o.book_id.lines_per_voucher and o.book_id.l10n_ar_cai">
-                            CAI: <span t-field="o.book_id.l10n_ar_cai"/>
+                        <div t-if="not o.book_id.lines_per_voucher and o.book_id.adhoc_l10n_ar_cai">
+                            CAI: <span t-field="o.book_id.adhoc_l10n_ar_cai"/>
                         </div>
-                        <div t-if="not o.book_id.lines_per_voucher and o.book_id.l10n_ar_cai_due">
-                            CAI Due Date: <span t-field="o.book_id.l10n_ar_cai_due"/>
+                        <div t-if="not o.book_id.lines_per_voucher and o.book_id.adhoc_l10n_ar_cai_due">
+                            CAI Due Date: <span t-field="o.book_id.adhoc_l10n_ar_cai_due"/>
                         </div>
                         <div name="pager" t-if="report_type == 'pdf'">
                             Page: <span class="page"/>
@@ -154,10 +154,10 @@
                     <span t-field="o.origin"/>
                 </t>
                 <t position="after">
-                    <t t-if="o.cot">
+                    <t t-if="o.adhoc_cot">
                         <br/>
                         <strong>COT:</strong>
-                        <span t-field="o.cot"/>
+                        <span t-field="o.adhoc_cot"/>
                     </t>
                 </t>
                 <t t-if="o._fields.get('purchase_order_number') and o.sudo().purchase_order_number">
@@ -186,7 +186,7 @@
     </div>
 
     <table name="stock_move_line_table" position="after">
-        <t t-if="o.book_id.report_signature_section and o.l10n_ar_afip_barcode">
+        <t t-if="o.book_id.adhoc_report_signature_section and o.adhoc_l10n_ar_afip_barcode">
             <table class="table table-borderless table-sm">
                 <thead>
                     <tr>

@@ -15,43 +15,43 @@ class StockPicking(models.Model):
 
     _inherit = "stock.picking"
 
-    dispatch_number = fields.Char(
+    adhoc_dispatch_number = fields.Char(
         help='Si define un número de despacho, al validar la transferencia, '
         'el mismo será asociado a los lotes sin número de despacho vinculados '
         'a la transferencia.'
     )
-    document_type_id = fields.Many2one(
-        related='book_id.document_type_id',
+    adhoc_document_type_id = fields.Many2one(
+        related='book_id.adhoc_document_type_id',
         readonly=True
     )
-    cot_numero_unico = fields.Char(
+    adhoc_cot_numero_unico = fields.Char(
         'COT - Nro Único',
         help='Número único del último COT solicitado',
     )
-    cot_numero_comprobante = fields.Char(
+    adhoc_cot_numero_comprobante = fields.Char(
         'COT - Nro Comprobante',
         help='Número de comprobante del último COT solicitado',
     )
-    cot = fields.Char(
+    adhoc_cot = fields.Char(
         'COT',
         help='Número de COT del último COT solicitado',
     )
-    l10n_ar_afip_barcode = fields.Char(compute='_compute_l10n_ar_afip_barcode', string='AFIP Barcode',)
+    adhoc_l10n_ar_afip_barcode = fields.Char(compute='_compute_adhoc_l10n_ar_afip_barcode', string='AFIP Barcode',)
 
-    def _compute_l10n_ar_afip_barcode(self):
+    def _compute_adhoc_l10n_ar_afip_barcode(self):
         for rec in self:
             barcode = False
-            if rec.book_id.sequence_id.prefix and rec.book_id.l10n_ar_cai_due \
-                    and rec.book_id.l10n_ar_cai and not rec.book_id.lines_per_voucher:
-                cae_due = rec.book_id.l10n_ar_cai_due.strftime('%Y%m%d')
+            if rec.book_id.sequence_id.prefix and rec.book_id.adhoc_l10n_ar_cai_due \
+                    and rec.book_id.adhoc_l10n_ar_cai and not rec.book_id.lines_per_voucher:
+                cae_due = rec.book_id.adhoc_l10n_ar_cai_due.strftime('%Y%m%d')
                 pos_number = int(re.sub('[^0-9]', '', rec.book_id.sequence_id.prefix))
                 barcode = ''.join([
-                    str(rec.book_id.report_partner_id.l10n_ar_vat or rec.company_id.partner_id.l10n_ar_vat),
-                    "%03d" % int(rec.book_id.document_type_id.code),
+                    str(rec.book_id.adhoc_report_partner_id.l10n_ar_vat or rec.company_id.partner_id.l10n_ar_vat),
+                    "%03d" % int(rec.book_id.adhoc_document_type_id.code),
                     "%05d" % pos_number,
-                    rec.book_id.l10n_ar_cai,
+                    rec.book_id.adhoc_l10n_ar_cai,
                     cae_due])
-            rec.l10n_ar_afip_barcode = barcode
+            rec.adhoc_l10n_ar_afip_barcode = barcode
 
     def get_arba_file_data(
             self, datetime_out, tipo_recorrido, carrier_partner,
@@ -320,13 +320,13 @@ class StockPicking(models.Model):
                 # buscamos si hay unidad de medida de la cateogria que tenga
                 # codigo de arba y usamos esa, ademas convertimos la cantidad
                 product_qty = line.product_uom_qty
-                if line.product_uom.arba_code:
+                if line.product_uom.adhoc_arba_code:
                     uom_arba_with_code = line.product_uom
                 else:
                     uom_arba_with_code = line.product_uom.search([
                         ('category_id', '=',
                             line.product_uom.category_id.id),
-                        ('arba_code', '!=', False)], limit=1)
+                        ('adhoc_arba_code', '!=', False)], limit=1)
                     if not uom_arba_with_code:
                         raise UserError(_(
                             'No arba code for uom "%s" (Id: %s) or any uom in '
@@ -337,7 +337,7 @@ class StockPicking(models.Model):
                     product_qty = line.product_uom._compute_quantity(
                         product_qty, uom_arba_with_code)
 
-                if not line.product_id.arba_code:
+                if not line.product_id.adhoc_arba_code:
                     raise UserError(_(
                         'No arba code for product "%s" (Id: %s)') % (
                         line.product_id.name, line.product_id.id))
@@ -348,10 +348,10 @@ class StockPicking(models.Model):
 
                     # CODIGO_UNICO_PRODUCTO
                     # nomenclador COT (Transporte de Bienes)
-                    line.product_id.arba_code,
+                    line.product_id.adhoc_arba_code,
 
                     # RENTAS_CODIGO_UNIDAD_MEDIDA: ver tabla unidades de medida
-                    uom_arba_with_code.arba_code,
+                    uom_arba_with_code.adhoc_arba_code,
 
                     # CANTIDAD: 13 enteros y 2 decimales (no incluir coma
                     # ni punto), ej 200 un -> 20000
@@ -451,9 +451,9 @@ class StockPicking(models.Model):
             COT.Procesado, COT.NumeroUnico, COT.COT)
 
         self.write({
-            'cot_numero_unico': COT.NumeroComprobante,
-            'cot_numero_comprobante': COT.NumeroUnico,
-            'cot': COT.COT,
+            'adhoc_cot_numero_unico': COT.NumeroComprobante,
+            'adhoc_cot_numero_comprobante': COT.NumeroUnico,
+            'adhoc_cot': COT.COT,
         })
         self.message_post(
             body=body,
@@ -467,8 +467,8 @@ class StockPicking(models.Model):
         res = super()._action_done()
         for rec in self.filtered(
                 lambda x: x.picking_type_code == 'incoming' and
-                x.dispatch_number):
+                x.adhoc_dispatch_number):
             rec.move_line_ids.filtered(
-                lambda l: l.lot_id and not l.lot_id.dispatch_number).mapped(
-                    'lot_id').write({'dispatch_number': rec.dispatch_number})
+                lambda l: l.lot_id and not l.lot_id.adhoc_dispatch_number).mapped(
+                    'lot_id').write({'adhoc_dispatch_number': rec.adhoc_dispatch_number})
         return res

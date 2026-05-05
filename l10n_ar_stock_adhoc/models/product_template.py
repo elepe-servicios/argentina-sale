@@ -9,13 +9,13 @@ from odoo.exceptions import ValidationError
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    arba_code = fields.Char(
+    adhoc_arba_code = fields.Char(
     )
 
-    @api.constrains('arba_code')
+    @api.constrains('adhoc_arba_code')
     def check_arba_code(self):
-        for rec in self.filtered('arba_code'):
-            if len(rec.arba_code) != 6 or not rec.arba_code.isdigit():
+        for rec in self.filtered('adhoc_arba_code'):
+            if len(rec.adhoc_arba_code) != 6 or not rec.adhoc_arba_code.isdigit():
                 raise ValidationError(_(
                     'El código según nomenclador de arba debe ser de 6 dígitos'
                     ' numéricos'))

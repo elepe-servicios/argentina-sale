@@ -1,6 +1,6 @@
 {
     'name': 'Remitos, COT y demas ajustes de stock para Argentina',
-    'version': "17.0.1.4.0",
+    'version': "17.0.2.0.0",
     'category': 'Localization/Argentina',
     'sequence': 14,
     'author': 'ADHOC SA',
@@ -14,7 +14,7 @@
         'stock_picking_invoice_link',
     ],
     'data': [
-        'security/l10n_ar_stock_security.xml',
+        'security/l10n_ar_stock_adhoc_security.xml',
         'wizards/arba_cot_wizard_views.xml',
         'wizards/res_config_settings_view.xml',
         'views/stock_picking_views.xml',

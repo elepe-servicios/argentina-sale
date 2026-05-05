@@ -19,10 +19,10 @@
                 'location_id': ref('stock.stock_location_stock'),
                 'location_dest_id': ref('stock.stock_location_customers'),
             })]"/>
-            <field name="dispatch_number">12345</field>
-            <field name="cot_numero_unico">ABC123</field>
-            <field name="cot_numero_comprobante">000001</field>
-            <field name="cot">COT-001</field>
+            <field name="adhoc_dispatch_number">12345</field>
+            <field name="adhoc_cot_numero_unico">ABC123</field>
+            <field name="adhoc_cot_numero_comprobante">000001</field>
+            <field name="adhoc_cot">COT-001</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -48,10 +48,10 @@
                 'location_id': ref('stock.stock_location_stock'),
                 'location_dest_id': ref('stock.stock_location_customers'),
             })]"/>
-            <field name="dispatch_number">45843</field>
-            <field name="cot_numero_unico">ABC123</field>
-            <field name="cot_numero_comprobante">000001</field>
-            <field name="cot">COT-001</field>
+            <field name="adhoc_dispatch_number">45843</field>
+            <field name="adhoc_cot_numero_unico">ABC123</field>
+            <field name="adhoc_cot_numero_comprobante">000001</field>
+            <field name="adhoc_cot">COT-001</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>

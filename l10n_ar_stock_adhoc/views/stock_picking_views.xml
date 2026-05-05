@@ -10,17 +10,17 @@
                     help="Obtener Código de Operaciones de Traslado (ARBA / Santa Fe)"
                     type="action" invisible="not book_id or picking_type_code == 'incoming' or state != 'done'"
                     context="{'default_importe': declared_value}"
-                    groups="l10n_ar_stock.arba_cot_enabled"/>
+                    groups="l10n_ar_stock_adhoc.arba_cot_enabled"/>
             </button>
             <group name="other_infos" position="after">
-                <group string="Remito electrónico (COT)" name="cot" groups="l10n_ar_stock.arba_cot_enabled">
-                    <field name="cot"/>
-                    <field name="cot_numero_unico"/>
-                    <field name="cot_numero_comprobante"/>
+                <group string="Remito electrónico (COT)" name="cot" groups="l10n_ar_stock_adhoc.arba_cot_enabled">
+                    <field name="adhoc_cot"/>
+                    <field name="adhoc_cot_numero_unico"/>
+                    <field name="adhoc_cot_numero_comprobante"/>
                 </group>
             </group>
             <field name="partner_id" position="after">
-                <field name="dispatch_number" invisible="picking_type_code != 'incoming'" readonly="state in ['cancel', 'done']"/>
+                <field name="adhoc_dispatch_number" invisible="picking_type_code != 'incoming'" readonly="state in ['cancel', 'done']"/>
             </field>
         </field>
     </record>

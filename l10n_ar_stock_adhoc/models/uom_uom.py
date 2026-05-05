@@ -8,7 +8,7 @@ from odoo import fields, models
 class ProductUom(models.Model):
     _inherit = 'uom.uom'
 
-    arba_code = fields.Char(
+    adhoc_arba_code = fields.Char(
     )
 
     def action_arba_codes(self):
