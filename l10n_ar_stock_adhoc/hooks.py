@@ -86,10 +86,10 @@ def pre_init_hook(env):
     _logger.info("l10n_ar_stock_adhoc: pre_init_hook starting")
     _logger.info("=" * 60)
 
-    if not _module_installed(cr, _OLD_MODULE):
+    if not _is_adhoc_old_module_installed(cr):
         _logger.info(
-            "Module '%s' not found or not installed — fresh install, "
-            "nothing to migrate.",
+            "Module '%s' not found, not installed, or is the official Odoo build — "
+            "fresh install, nothing to migrate.",
             _OLD_MODULE,
         )
         _logger.info("l10n_ar_stock_adhoc: pre_init_hook finished (no-op)")
@@ -191,6 +191,29 @@ def _module_installed(cr, module):
         (module,),
     )
     return bool(cr.fetchone())
+
+
+def _is_adhoc_old_module_installed(cr):
+    """Return True only when the *ADHOC* build of l10n_ar_stock is installed.
+
+    Odoo 19 ships an official ``l10n_ar_stock`` module (Odoo S.A.) that has the
+    same technical name but does NOT create the ADHOC-specific columns
+    (``dispatch_number``, ``arba_code``, etc.).  Checking for the presence of
+    one of those sentinel columns is the most reliable way to distinguish the
+    two without relying on the ``author`` metadata, which can be altered.
+    """
+    if not _module_installed(cr, _OLD_MODULE):
+        return False
+    # dispatch_number is the pre-rename column name exclusive to the old ADHOC
+    # module. The official Odoo l10n_ar_stock never creates this column.
+    if not _column_exists(cr, "stock_picking", "dispatch_number"):
+        _logger.info(
+            "Module '%s' is installed but ADHOC-specific columns are absent — "
+            "this is the official Odoo l10n_ar_stock, skipping migration.",
+            _OLD_MODULE,
+        )
+        return False
+    return True
 
 
 def _column_exists(cr, table, column):
