@@ -74,13 +74,14 @@ _FIELD_RENAMES = [
 ]
 
 
-def pre_init_hook(cr):
+def pre_init_hook(env):
     """Prepare the database for l10n_ar_stock_adhoc installation.
 
     Called by Odoo BEFORE the module's models and data are loaded.
     When ``l10n_ar_stock`` is detected in the database it performs all
     necessary renames so the ORM finds existing data under the new names.
     """
+    cr = env.cr
     _logger.info("=" * 60)
     _logger.info("l10n_ar_stock_adhoc: pre_init_hook starting")
     _logger.info("=" * 60)
