@@ -99,11 +99,16 @@ def pre_init_hook(env):
         "Module '%s' detected — migrating to '%s'", _OLD_MODULE, _NEW_MODULE
     )
 
-    # 1. Rename DB columns
+    # 1. Drop old views BEFORE moving external IDs.
+    # Their arch references old field names; Odoo will recreate them from
+    # the new XML files with the correct (adhoc_-prefixed) field names.
+    _delete_module_views(cr, _OLD_MODULE)
+
+    # 2. Rename DB columns
     for table, old_col, new_col in _COLUMN_RENAMES:
         _rename_column(cr, table, old_col, new_col)
 
-    # 2. Move all external IDs to the new module
+    # 3. Move all remaining external IDs to the new module
     cr.execute(
         "UPDATE ir_model_data SET module = %s WHERE module = %s",
         (_NEW_MODULE, _OLD_MODULE),
@@ -112,7 +117,7 @@ def pre_init_hook(env):
         "Moved %d external IDs: %s -> %s", cr.rowcount, _OLD_MODULE, _NEW_MODULE
     )
 
-    # 3. Rename field entries in ir_model_fields (and their own xmlids)
+    # 4. Rename field entries in ir_model_fields (and their own xmlids)
     for model, old_field, new_field in _FIELD_RENAMES:
         _rename_field_metadata(cr, model, old_field, new_field)
 
@@ -141,6 +146,42 @@ def pre_init_hook(env):
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def _delete_module_views(cr, module):
+    """Delete all ir.ui.view records owned by *module*.
+
+    The old views carry an arch with stale field names.  Odoo will recreate
+    them from the new XML files with the correct (adhoc_-prefixed) names.
+    Related ``ir_model_data`` rows are deleted first to avoid FK violations.
+    """
+    cr.execute(
+        """
+        SELECT imd.res_id
+          FROM ir_model_data imd
+         WHERE imd.module = %s
+           AND imd.model = 'ir.ui.view'
+           AND imd.res_id IS NOT NULL
+        """,
+        (module,),
+    )
+    view_ids = [row[0] for row in cr.fetchall()]
+    if not view_ids:
+        _logger.info("No ir.ui.view records found for module '%s'", module)
+        return
+    # Remove external-ID rows first (FK from ir_model_data → ir_ui_view)
+    cr.execute(
+        "DELETE FROM ir_model_data WHERE module = %s AND model = 'ir.ui.view'",
+        (module,),
+    )
+    _logger.info("Deleted %d ir_model_data rows for ir.ui.view", cr.rowcount)
+    # Remove the views themselves
+    cr.execute(
+        "DELETE FROM ir_ui_view WHERE id = ANY(%s)", (view_ids,)
+    )
+    _logger.info(
+        "Deleted %d ir.ui.view records for module '%s'", cr.rowcount, module
+    )
+
 
 def _module_installed(cr, module):
     """Return True if *module* is installed or scheduled for upgrade."""
