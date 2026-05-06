@@ -23,7 +23,7 @@
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                             </div>
                         </div>
-                        <div class="text-muted" invisible="not group_arba_cot_enabled">
+                        <div class="text-muted" invisible="not adhoc_group_arba_cot_enabled">
                             Indique la clave COT utilizada para generación de remito electrónico / COT. Puede probarla intentando subir cualquier archivo en este <a target="_blank" href="https://cot.arba.gov.ar/TransporteBienes/pages/remitos/PresentarRemitos.jsp">link</a> (el usuario es el CUIT). Si da error en nombre de archivo entonces la clave es correcta.
                         </div>
                     </div>
