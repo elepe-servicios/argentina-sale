@@ -36,6 +36,5 @@
         "demo/stock_picking_demo.xml",
     ],
     "installable": True,
-    "auto_install": ["l10n_ar_stock"],
     "application": False,
 }
